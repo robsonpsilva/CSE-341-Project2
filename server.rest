@@ -1,6 +1,6 @@
-GET https://cse-341-project1-t08e.onrender.com/
+GET http://localhost:8000
 ###
-GET https://cse-341-project1-t08e.onrender.com/contacts
+GET http://localhost:8000/contacts
 ###
 GET https://cse-341-project1-t08e.onrender.com/contacts/67ca0aa706dd9a333bc7be0f
 ###
