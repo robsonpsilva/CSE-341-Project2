@@ -25,8 +25,8 @@ router.get(
     "/contacts", contactsController.getAll); // Route to search all contacts
 router.get("/contacts/:id", validation.saveContact, contactsController.getSingle); // Route to search for a contact by ID
 router.post("/contacts", validation.saveContact, contactsController.insertContact); // Route to create contact
-router.put("/contacts/:id", contactsController.updateContact);//route to update contact
-router.delete("/contacts/:id", contactsController.deleteContact); //Route to delete contact
+router.put("/contacts/:id", validation.saveContact,contactsController.updateContact);//route to update contact
+router.delete("/contacts/:id", validation.saveContact,contactsController.deleteContact); //Route to delete contact
 
 
 router.get(
