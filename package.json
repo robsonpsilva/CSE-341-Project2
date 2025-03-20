@@ -1,5 +1,5 @@
 {
-  "name": "cse-341-project1",
+  "name": "cse-341-project2",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
@@ -9,15 +9,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/robsonpsilva/cse-341-project1.git"
+    "url": "git+https://github.com/robsonpsilva/cse-341-project2.git"
   },
   "author": "Robson Paulo da Silva",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/robsonpsilva/cse-341-project1/issues"
+    "url": "https://github.com/robsonpsilva/cse-341-project2/issues"
   },
-  "homepage": "https://github.com/robsonpsilva/cse-341-project1#readme",
-  "description": "My first project",
+  "homepage": "https://github.com/robsonpsilva/cse-341-project2#readme",
+  "description": "W03 Project: Project 2 Part 1 (CRUD Operations)",
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^4.21.2",

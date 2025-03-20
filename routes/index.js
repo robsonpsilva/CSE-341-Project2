@@ -21,7 +21,7 @@ const validation = require("../middleware/validate");
 router.use("/",require("./swagger"));
 // Rotas para contatos
 router.get(
-    //#swagger.tags=[`Get all contacts `]
+    //#swagger.tags=[Get all contacts]
     "/contacts", contactsController.getAll); // Route to search all contacts
 router.get("/contacts/:id", validation.saveContact, contactsController.getSingle); // Route to search for a contact by ID
 router.post("/contacts", validation.saveContact, contactsController.insertContact); // Route to create contact
@@ -30,11 +30,11 @@ router.delete("/contacts/:id", validation.saveContact,contactsController.deleteC
 
 
 router.get(
-    //#swagger.tags=[`Get all contacts `]
-    "/itens", itensControler.getAllItens); // Route to search all contacts
-router.get("/itens/:id", validation.saveItem, itensControler.getSingleItem); // Route to search for a contact by ID
-router.post("/itens", validation.saveItem, itensControler.insertItem); // Route to create contact
-router.put("/itens/:id", validation.saveItem, itensControler.updateItem);//route to update contact
-router.delete("/itens/:id", validation.saveItem, itensControler.deleteItem); //Route to delete contact
+    //#swagger.tags=[Get all itens]
+    "/itens", itensControler.getAllItens); // Route to search all itens
+router.get("/itens/:id", validation.saveItem, itensControler.getSingleItem); // Route to search for a item by ID
+router.post("/itens", validation.saveItem, itensControler.insertItem); // Route to create item
+router.put("/itens/:id", validation.saveItem, itensControler.updateItem);//route to update item
+router.delete("/itens/:id", validation.saveItem, itensControler.deleteItem); //Route to delete item
 
 module.exports = router;
