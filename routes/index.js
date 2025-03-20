@@ -1,5 +1,5 @@
 const router = require('express').Router();
-
+router.use("/",require("./swagger"));
 router.get("/", (req,res) => {res.send(`<html>
             <head>
                 <title>Robson Paulo da Silva</title>
@@ -18,7 +18,6 @@ const contactsController = require("../controllers/contacts");
 const itensControler = require("../controllers/itens");
 const validation = require("../middleware/validate");
 
-router.use("/",require("./swagger"));
 // Rotas para contatos
 router.get(
     //#swagger.tags=[Get all contacts]

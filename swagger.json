@@ -5,10 +5,11 @@
     "description": "Contacts and Itens Api",
     "version": "1.0.0"
   },
-  "host": "localhost:8001",
+  "host": "localhost:8000",
   "basePath": "/",
   "schemes": [
-    "http"
+    "http",
+    "https"
   ],
   "paths": {
     "/": {
