@@ -53,7 +53,7 @@ const getSingleItem = async (req, res) => {
 
         // Respondendo com sucesso
         res.setHeader("Content-Type", "application/json");
-        res.status(200).json(contacts[0]);
+        res.status(200).json(itens[0]);
     } catch (error) {
         // Tratamento de erros inesperados
         console.error("Error fetching contact:", error);
