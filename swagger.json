@@ -5,7 +5,7 @@
     "description": "Contacts and Itens Api",
     "version": "1.0.0"
   },
-  "host": "https://cse-341-project2-8oxr.onrender.com",
+  "host": "cse-341-project2-8oxr.onrender.com",
   "basePath": "/",
   "schemes": [
     "https"
