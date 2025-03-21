@@ -5,10 +5,10 @@
     "description": "Contacts and Itens Api",
     "version": "1.0.0"
   },
-  "host": "localhost:8000",
+  "host": "https://cse-341-project2-8oxr.onrender.com",
   "basePath": "/",
   "schemes": [
-    "http"
+    "https"
   ],
   "paths": {
     "/": {
