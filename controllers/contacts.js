@@ -3,6 +3,7 @@ const ObjectId = require("mongodb").ObjectId;
 
 const getAll = async (req, res) => {
     try {
+        //#swagger.tags=["Contacts"]
         // Consulta ao banco de dados
         const result = await mongodb
             .getDatabase()
@@ -26,7 +27,7 @@ const getAll = async (req, res) => {
 };
 
 const getSingle = async (req, res) => {
-    //#swagger.tags=["Users"]
+    //#swagger.tags=["Contacts"]
     try {
         // Validação do formato do ID para garantir que seja válido
         if (!req.params.id || !ObjectId.isValid(req.params.id)) {
@@ -61,7 +62,7 @@ const getSingle = async (req, res) => {
 };
 
 const insertContact = async (req, res) => {
-    //#swagger.tags=["Users"]
+    //#swagger.tags=["Contacts"]
     try {
         const { firstName, lastName, email, favoriteColor, birthday } = req.body;
     
@@ -96,7 +97,7 @@ const insertContact = async (req, res) => {
 };
 
 const deleteContact = async (req, res) => {
-    //#swagger.tags=["Users"]
+    ///#swagger.tags=["Contacts"]
     try {
         const { id } = req.params; // Obtém o ID da URL
         if(!ObjectId.isValid(req.params.id)){
@@ -129,6 +130,7 @@ const deleteContact = async (req, res) => {
 
 // Função para atualizar um contato
 const updateContact = async (req, res) => {
+    //#swagger.tags=["Contacts"]
     try {
         if(!ObjectId.isValid(req.params.id)){
             res.status(400).json("Must have a valid contac id to update a contac.");

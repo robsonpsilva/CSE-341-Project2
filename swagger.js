@@ -5,7 +5,7 @@ const doc = {
         title: "Contacts and Itens Api",
         description: "Contacts and Itens Api"
     },
-    host: "localhost: 8001",
+    host: "localhost:8000",
     schemes: ["https, http"]
 } 
 

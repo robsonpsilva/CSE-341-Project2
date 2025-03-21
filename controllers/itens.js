@@ -2,6 +2,7 @@ const mongodb = require("../data/database");
 const ObjectId = require("mongodb").ObjectId;
 
 const getAllItens = async (req, res) => {
+     //#swagger.tags=["Itens"]
     try {
         // Consulta ao banco de dados
         const result = await mongodb
@@ -11,22 +12,22 @@ const getAllItens = async (req, res) => {
             .find();
 
         // Convertendo o resultado em um array
-        const contacts = await result.toArray();
+        const itens = await result.toArray();
 
         // Respondendo com sucesso
         res.setHeader("Content-Type", "application/json");
-        res.status(200).json(contacts);
+        res.status(200).json(itens);
     } catch (error) {
         // Tratamento de erros
-        console.error("Error fetching contacts:", error);
+        console.error("Error fetching itens:", error);
 
         // Retornando erro 500 (Internal Server Error) ao cliente
-        res.status(500).json({error: "An error occurred while retrieving contacts." });
+        res.status(500).json({error: "An error occurred while retrieving itens." });
     }
 };
 
 const getSingleItem = async (req, res) => {
-    //#swagger.tags=["Users"]
+    //#swagger.tags=["Itens"]
     try {
         // Validação do formato do ID para garantir que seja válido
         if (!req.params.id || !ObjectId.isValid(req.params.id)) {
@@ -43,10 +44,10 @@ const getSingleItem = async (req, res) => {
             .find({ _id: itemId });
 
         // Convertendo o resultado em um array
-        const contacts = await result.toArray();
+        const itens = await result.toArray();
 
         // Verificando se o contato foi encontrado
-        if (contacts.length === 0) {
+        if (itens.length === 0) {
             return res.status(404).json({ error: "Item not found" });
         }
 
@@ -59,30 +60,37 @@ const getSingleItem = async (req, res) => {
         res.status(500).json({ error: "An error occurred while retrieving the item." });
     }
 };
-
+//category
+// "Vegetable"
+// expiration_date
+// "03/30/2025"
+// vendor_id
+// "0001"
 const insertItem = async (req, res) => {
-    //#swagger.tags=["Users"]
+    //#swagger.tags=["Itens"]
     try {
-        const { firstName, lastName, email, favoriteColor, birthday } = req.body;
+        const { name, quantity, unityprice, description, category, expiration_date, vendor_id } = req.body;
     
         // Validação básica
-        if (!firstName || !lastName || !email || !favoriteColor || !birthday) {
-            return res.status(400).json({ error: "All fields are required." });
+        if (!name || !quantity || !unityprice || !expiration_date || !vendor_id) {
+            return res.status(400).json({ error: "Name, quantity, Unity price, Expiration Date and Vendor Id are required." });
         }
     
         // Obter referência da coleção do MongoDB
-        const contactsCollection = await mongodb.getDatabase().db().collection("itens");
+        const itensCollection = await mongodb.getDatabase().db().collection("itens");
     
         // Inserir os dados na coleção
-        const newContact = {
-            firstName,
-            lastName,
-            email,
-            favoriteColor,
-            birthday, // Certifique-se de enviar uma data válida
+        const newItem= {
+            name,
+            quantity,
+            unityprice,
+            description, 
+            category, 
+            expiration_date,
+            vendor_id,
         };
     
-        const result = await contactsCollection.insertOne(newContact);
+        const result = await itensCollection.insertOne(newItem);
     
         // Retorna a resposta de sucesso
         res.status(201).json({
@@ -96,7 +104,7 @@ const insertItem = async (req, res) => {
 };
 
 const deleteItem = async (req, res) => {
-    //#swagger.tags=["Users"]
+    //#swagger.tags=["Itens"]
     try {
         const { id } = req.params; // Obtém o ID da URL
         if(!ObjectId.isValid(req.params.id)){
@@ -108,10 +116,10 @@ const deleteItem = async (req, res) => {
         }
 
         // Obter referência à coleção do MongoDB
-        const contactsCollection = await mongodb.getDatabase().db().collection("itens");
+        const itensCollection = await mongodb.getDatabase().db().collection("itens");
 
         // Excluir o contato com o ID fornecido
-        const result = await contactsCollection.deleteOne({ _id: new ObjectId(id) });
+        const result = await itensCollection.deleteOne({ _id: new ObjectId(id) });
 
         // Verificar se o contato foi encontrado e excluído
         if (result.deletedCount === 0) {
@@ -129,12 +137,13 @@ const deleteItem = async (req, res) => {
 
 // Função para atualizar um contato
 const updateItem = async (req, res) => {
+     //#swagger.tags=["Itens"]
     try {
         if(!ObjectId.isValid(req.params.id)){
             res.status(400).json("Must have a valid item id to update a contac.");
         }
         const { id } = req.params; // ID do registro a ser atualizado
-        const { firstName, lastName, email, favoriteColor, birthday } = req.body;
+        const { name, quantity, unityprice, description, category, expiration_date, vendor_id } = req.body;
 
         // Valida o formato do ID
         if (!ObjectId.isValid(id)) {
@@ -142,24 +151,26 @@ const updateItem = async (req, res) => {
         }
 
         // Valida os dados enviados pelo cliente
-        if (!firstName || !lastName || !email || !favoriteColor || !birthday) {
-            return res.status(400).json({ error: "All fields are required." });
+        if (!name || !quantity || !unityprice || !expiration_date || !vendor_id) {
+            return res.status(400).json({ error: "Name, quantity, Unity price, Expiration Date and Vendor Id are required." });
         }
 
         // Obter a coleção do MongoDB
-        const contactsCollection = await mongodb.getDatabase().db().collection("itens");
+        const itensCollection = await mongodb.getDatabase().db().collection("itens");
 
         // Dados a serem atualizados
         const updatedData = {
-            firstName,
-            lastName,
-            email,
-            favoriteColor,
-            birthday,
+            name,
+            quantity,
+            unityprice,
+            description, 
+            category, 
+            expiration_date,
+            vendor_id,
         };
 
         // Atualizar o contato pelo ID
-        const result = await contactsCollection.updateOne(
+        const result = await itensCollection.updateOne(
             { _id: new ObjectId(id) }, // Filtro pelo ID
             { $set: updatedData } // Atualização parcial
         );

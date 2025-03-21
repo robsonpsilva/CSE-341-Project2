@@ -8,8 +8,7 @@
   "host": "localhost:8000",
   "basePath": "/",
   "schemes": [
-    "http",
-    "https"
+    "http"
   ],
   "paths": {
     "/": {
@@ -40,7 +39,7 @@
       },
       "post": {
         "tags": [
-          "Users"
+          "Contacts"
         ],
         "description": "",
         "parameters": [
@@ -88,7 +87,7 @@
     "/contacts/{id}": {
       "get": {
         "tags": [
-          "Users"
+          "Contacts"
         ],
         "description": "",
         "produces": [
@@ -121,6 +120,9 @@
         }
       },
       "put": {
+        "tags": [
+          "Contacts"
+        ],
         "description": "",
         "parameters": [
           {
@@ -174,7 +176,7 @@
       },
       "delete": {
         "tags": [
-          "Users"
+          "Contacts"
         ],
         "description": "",
         "parameters": [
@@ -222,7 +224,7 @@
       },
       "post": {
         "tags": [
-          "Users"
+          "Itens"
         ],
         "description": "",
         "parameters": [
@@ -232,19 +234,25 @@
             "schema": {
               "type": "object",
               "properties": {
-                "firstName": {
+                "name": {
                   "example": "any"
                 },
-                "lastName": {
+                "quantity": {
                   "example": "any"
                 },
-                "email": {
+                "unityprice": {
                   "example": "any"
                 },
-                "favoriteColor": {
+                "description": {
                   "example": "any"
                 },
-                "birthday": {
+                "category": {
+                  "example": "any"
+                },
+                "expiration_date": {
+                  "example": "any"
+                },
+                "vendor_id": {
                   "example": "any"
                 }
               }
@@ -270,7 +278,7 @@
     "/itens/{id}": {
       "get": {
         "tags": [
-          "Users"
+          "Itens"
         ],
         "description": "",
         "produces": [
@@ -303,6 +311,9 @@
         }
       },
       "put": {
+        "tags": [
+          "Itens"
+        ],
         "description": "",
         "parameters": [
           {
@@ -317,19 +328,25 @@
             "schema": {
               "type": "object",
               "properties": {
-                "firstName": {
+                "name": {
                   "example": "any"
                 },
-                "lastName": {
+                "quantity": {
                   "example": "any"
                 },
-                "email": {
+                "unityprice": {
                   "example": "any"
                 },
-                "favoriteColor": {
+                "description": {
                   "example": "any"
                 },
-                "birthday": {
+                "category": {
+                  "example": "any"
+                },
+                "expiration_date": {
+                  "example": "any"
+                },
+                "vendor_id": {
                   "example": "any"
                 }
               }
@@ -356,7 +373,7 @@
       },
       "delete": {
         "tags": [
-          "Users"
+          "Itens"
         ],
         "description": "",
         "parameters": [
