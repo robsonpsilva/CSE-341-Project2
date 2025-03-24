@@ -6,7 +6,7 @@ const saveContact = (req, res, next) =>  {
         lastName: "required|string",
         email: "required|email",
         favoriteColor: "required|string",
-        birthday: "string"
+        birthday: "date"
 
     };
     validator(req.body, validationRule, {}, (err,status) => {
