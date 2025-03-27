@@ -4,16 +4,14 @@ const bodyParser = require("body-parser");
 
 const passport = require("passport");
 const session = require("express-session");
-const giHubStrategy = require("password-github2").Strategy;
-const cors require("cors");
-
+const giHubStrategy = require("passport-github2").Strategy;
 
 const cors = require("cors");
 app.use(cors());
 
 const mongodb = require("./data/database");
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 3000;
 
 app
 .use(bodyParser.json())
@@ -34,7 +32,7 @@ app
 })
 .use(cors({methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"]}))
 .use(cors({origin: "*"}))
-.use("/", "./routes/index.js")
+.use("/", require("./routes/index.js"));
 
 passport.use(new giHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
