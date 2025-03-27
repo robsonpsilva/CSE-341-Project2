@@ -14,17 +14,20 @@ router.get("/", (req,res) => {res.send(`<html>
             </body>
         </html>`);});
 
+const passport = require('passport');
 const contactsController = require("../controllers/contacts");
 const itensControler = require("../controllers/itens");
 const validation = require("../middleware/validate");
+
+const {isAuthenticated} = require( "../middleware/authenticate");
 
 // Rotas para contatos
 router.get(
     //#swagger.tags=[Get all contacts]
     "/contacts", contactsController.getAll); // Route to search all contacts
 router.get("/contacts/:id", contactsController.getSingle); // Route to search for a contact by ID
-router.post("/contacts", validation.saveContact, contactsController.insertContact); // Route to create contact
-router.put("/contacts/:id", validation.saveContact,contactsController.updateContact);//route to update contact
+router.post("/contacts", isAuthenticated, validation.saveContact, contactsController.insertContact); // Route to create contact
+router.put("/contacts/:id", isAuthenticated, validation.saveContact,contactsController.updateContact);//route to update contact
 router.delete("/contacts/:id", contactsController.deleteContact); //Route to delete contact
 
 
@@ -35,5 +38,14 @@ router.get("/itens/:id", itensControler.getSingleItem); // Route to search for a
 router.post("/itens", validation.saveItem, itensControler.insertItem); // Route to create item
 router.put("/itens/:id", validation.saveItem, itensControler.updateItem);//route to update item
 router.delete("/itens/:id", itensControler.deleteItem); //Route to delete item
+
+router.get("/login", passport.authenticate("github"), (req, res) => {});
+
+router.get("/logout", function(req, resw, next){
+    req.logOut(function(err){
+        if (err) { return next(err);}
+    });
+
+});
 
 module.exports = router;
