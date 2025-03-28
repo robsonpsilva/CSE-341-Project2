@@ -42,10 +42,13 @@ router.delete("/itens/:id", itensControler.deleteItem); //Route to delete item
 router.get("/login", passport.authenticate("github"), (req, res) => {});
 
 router.get("/logout", function(req, res, next){
-    req.logOut(function(err){
-        if (err) { return next(err);}
-    });
-    res.redirect("/");
+    if (isAuthenticated){
+        req.logOut(function(err){
+            if (err) { return next(err);}
+        }); 
+    }
+    res.send("Você não está logado.");
+    
 });
 
 
