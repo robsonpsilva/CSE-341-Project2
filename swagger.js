@@ -5,9 +5,9 @@ const doc = {
         title: "Contacts and Itens Api",
         description: "Contacts and Itens Api"
     },
-    // host: "cse-341-project2-8oxr.onrender.com",
+    host: "cse-341-project2-8oxr.onrender.com",
 
-    host: "localhost:3000",
+    // host: "localhost:3000",
     schemes: ["http"]
 } 
 

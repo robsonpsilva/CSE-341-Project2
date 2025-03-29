@@ -1,11 +1,4 @@
 const router = require('express').Router();
-const passport = require('passport');
-const contactsController = require("../controllers/contacts");
-const itensControler = require("../controllers/itens");
-const userControler = require("../controllers/users");
-const validation = require("../middleware/validate");
-const {isAuthenticated} = require( "../middleware/authenticate");
-
 
 router.use("/",require("./swagger"));
 router.get("/", (req,res) => {res.send(`<html>
@@ -20,8 +13,16 @@ router.get("/", (req,res) => {res.send(`<html>
                     <li><a href=https://cse-341-project1-t08e.onrender.com/contacts/67ca09d206dd9a333bc7be0e>Contact Id: ca09d206dd9a333bc7be0e </a></li>
                 </ul>
             </body>
-        </html>`);
-});
+        </html>`);});
+
+const passport = require('passport');
+const contactsController = require("../controllers/contacts");
+const itensControler = require("../controllers/itens");
+const userControler = require("../controllers/users");
+
+const validation = require("../middleware/validate");
+
+const {isAuthenticated} = require( "../middleware/authenticate");
 
 // Route for contacts
 router.get(
@@ -45,100 +46,71 @@ router.delete("/itens/:id", isAuthenticated, itensControler.deleteItem); //Route
 
 // Rota para criar usuário
 router.post("/create-user", async (req, res) => {
-    //#swagger.tags=[Create user]
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return res.status(400).json({ error: "Email and password are required" });
+        return res.status(400).json({ error: "Email and password are required." });
     }
 
     try {
         const result = await userControler.createUser(email, password);
         return res.status(201).json(result);
     } catch (error) {
-        console.error("Error creating user:", error.message);
+        console.error("Erro ao criar usuário:", error.message);
         return res.status(400).json({ error: error.message });
     }
 });
 
 // Rota para atualizar senha do usuário
 router.put("/update-user", async (req, res) => {
-    //#swagger.tags=[Update user]
     const { email, newPassword } = req.body;
 
     if (!email || !newPassword) {
         return res
             .status(400)
-            .json({ error: "Email e nova senha são obrigatórios" });
+            .json({ error: "Email and new password are required." });
     }
 
     try {
-        const result = await userControler.updateUser(email, newPassword);
+        const result = await updateUser(email, newPassword);
         return res.status(200).json(result);
     } catch (error) {
-        console.error("Erro ao atualizar usuário:", error.message);
+        console.error("Error updating user:", error.message);
         return res.status(400).json({ error: error.message });
     }
 });
 
-// // Rota para autenticar (login) do usuário
-// router.post("/login", async (req, res) => {
-//     //#swagger.tags=[Update user]
-//     const { email, password } = req.body;
+// Rota para autenticar (login) do usuário
+router.post("/login", async (req, res) => {
+    const { email, password } = req.body;
 
-//     if (!email || !password) {
-//         return res.status(400).json({ error: "Email e senha são obrigatórios" });
-//     }
+    if (!email || !password) {
+        return res.status(400).json({ error: "Email and password are required." });
+    }
 
-//     try {
-//         const result = await userControler.authenticateUser(email, password);
-//         return res.status(200).json(result);
-//     } catch (error) {
-//         console.error("Erro ao autenticar usuário:", error.message);
-//         return res.status(400).json({ error: error.message });
-//     }
-// });
-
-
-
-// router.get("/status", (req, res) => {
-//     if (req.isAuthenticated) {
-//         res.status(200).json({ message: "Você está autenticado!", user: req.user });
-//     } else {
-//         res.status(401).json({ message: "Você não está autenticado." });
-//     }
-// });
-
-router.get("/loginoauth", (req, res, next) => {
-    passport.authenticate("github", (err, user, info) => {
-        if (err) {
-            console.error("Erro na autenticação:", err);
-            return res.status(500).json({ error: "Erro na autenticação." });
-        }
-        if (!user) {
-            console.error("Usuário não autenticado:", info);
-            return res.status(401).json({ error: "Autenticação falhou." });
-        }
-
-        // Se tudo der certo, faça login e prossiga
-        req.logIn(user, (err) => {
-            if (err) {
-                console.error("Erro ao fazer login:", err);
-                return res.status(500).json({ error: "Erro ao fazer login." });
-            }
-            console.log("Login bem-sucedido!");
-            return res.status(200).json({ message: "Login bem-sucedido!" });
-        });
-    })(req, res, next);
+    try {
+        const result = await authenticateUser(email, password);
+        return res.status(200).json(result);
+    } catch (error) {
+        console.error("Error authenticating user:", error.message);
+        return res.status(400).json({ error: error.message });
+    }
 });
 
-router.get("/logoutoauth", function(req,res,next){
-     req.logOut(function(err){
-         if(err) {return next(err);}
-         res.redirect("/");
-     });
- });
+//routes for user creation, login and logout
 
 
+router.get("/login-oauth", passport.authenticate("github"), (req, res) => {});
+
+router.get("/logout-oauth", function(req, res, next){
+    if (isAuthenticated){
+        req.logOut(function(err){
+            if (err) { return next(err);}
+        }); 
+        res.redirect("/");  
+    }
+    res.send("You are not logged in.");
+    
+});
 
 module.exports = router;

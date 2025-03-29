@@ -5,7 +5,7 @@
     "description": "Contacts and Itens Api",
     "version": "1.0.0"
   },
-  "host": "localhost:3000",
+  "host": "cse-341-project2-8oxr.onrender.com",
   "basePath": "/",
   "schemes": [
     "http"
@@ -92,7 +92,13 @@
     },
     "/contacts/{id}": {
       "get": {
+        "tags": [
+          "Contacts"
+        ],
         "description": "",
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -102,8 +108,20 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
           "401": {
             "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
