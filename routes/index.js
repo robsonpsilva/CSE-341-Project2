@@ -123,6 +123,7 @@ router.get("/loginoauth", (req, res, next) => {
                 console.error("Erro ao fazer login:", err);
                 return res.status(500).json({ error: "Erro ao fazer login." });
             }
+            console.log("Login bem-sucedido!");
             return res.status(200).json({ message: "Login bem-sucedido!" });
         });
     })(req, res, next);
