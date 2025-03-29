@@ -99,20 +99,58 @@ router.post("/login", async (req, res) => {
 
 
 router.get("/status", (req, res) => {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated) {
         res.status(200).json({ message: "Você está autenticado!", user: req.user });
     } else {
         res.status(401).json({ message: "Você não está autenticado." });
     }
 });
 
-router.get("/loginoauth", passport.authenticate("github"), (req,res) => {});
+router.get("/loginoauth", (req, res, next) => {
+    passport.authenticate("github", (err, user, info) => {
+        if (err) {
+            console.error("Erro na autenticação:", err);
+            return res.status(500).json({ error: "Erro na autenticação." });
+        }
+        if (!user) {
+            console.error("Usuário não autenticado:", info);
+            return res.status(401).json({ error: "Autenticação falhou." });
+        }
 
-router.get("/logoutoauth", function(req,res,next){
-    req.logOut(function(err){
-        if(err) {return next(err);}
-        res.redirect("/");
+        // Se tudo der certo, faça login e prossiga
+        req.logIn(user, (err) => {
+            if (err) {
+                console.error("Erro ao fazer login:", err);
+                return res.status(500).json({ error: "Erro ao fazer login." });
+            }
+            return res.status(200).json({ message: "Login bem-sucedido!" });
+        });
+    })(req, res, next);
+});
+
+// router.get("/logoutoauth", function(req,res,next){
+//     req.logOut(function(err){
+//         if(err) {return next(err);}
+//         res.redirect("/");
+//     });
+// });
+
+router.get("/logoutoauth", function(req, res, next) {
+    req.logOut(function(err) {
+        if (err) { 
+            return next(err); 
+        }
+        req.session.destroy(function(err) {
+            if (err) {
+                console.error("Erro ao destruir a sessão:", err);
+                return next(err);
+            }
+            res.redirect("/"); // Redireciona após logout
+        });
+        res.clearCookie("connect.sid", { path: "/" });
     });
 });
+
+
 
 module.exports = router;
