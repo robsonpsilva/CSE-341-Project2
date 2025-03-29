@@ -45,6 +45,7 @@ router.delete("/itens/:id", isAuthenticated, itensControler.deleteItem); //Route
 
 // Rota para criar usuário
 router.post("/create-user", async (req, res) => {
+    //#swagger.tags=[Create user]
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -62,6 +63,7 @@ router.post("/create-user", async (req, res) => {
 
 // Rota para atualizar senha do usuário
 router.put("/update-user", async (req, res) => {
+    //#swagger.tags=[Update user]
     const { email, newPassword } = req.body;
 
     if (!email || !newPassword) {
@@ -79,32 +81,33 @@ router.put("/update-user", async (req, res) => {
     }
 });
 
-// Rota para autenticar (login) do usuário
-router.post("/login", async (req, res) => {
-    const { email, password } = req.body;
+// // Rota para autenticar (login) do usuário
+// router.post("/login", async (req, res) => {
+//     //#swagger.tags=[Update user]
+//     const { email, password } = req.body;
 
-    if (!email || !password) {
-        return res.status(400).json({ error: "Email e senha são obrigatórios" });
-    }
+//     if (!email || !password) {
+//         return res.status(400).json({ error: "Email e senha são obrigatórios" });
+//     }
 
-    try {
-        const result = await userControler.authenticateUser(email, password);
-        return res.status(200).json(result);
-    } catch (error) {
-        console.error("Erro ao autenticar usuário:", error.message);
-        return res.status(400).json({ error: error.message });
-    }
-});
+//     try {
+//         const result = await userControler.authenticateUser(email, password);
+//         return res.status(200).json(result);
+//     } catch (error) {
+//         console.error("Erro ao autenticar usuário:", error.message);
+//         return res.status(400).json({ error: error.message });
+//     }
+// });
 
 
 
-router.get("/status", (req, res) => {
-    if (req.isAuthenticated) {
-        res.status(200).json({ message: "Você está autenticado!", user: req.user });
-    } else {
-        res.status(401).json({ message: "Você não está autenticado." });
-    }
-});
+// router.get("/status", (req, res) => {
+//     if (req.isAuthenticated) {
+//         res.status(200).json({ message: "Você está autenticado!", user: req.user });
+//     } else {
+//         res.status(401).json({ message: "Você não está autenticado." });
+//     }
+// });
 
 router.get("/loginoauth", (req, res, next) => {
     passport.authenticate("github", (err, user, info) => {
@@ -129,28 +132,12 @@ router.get("/loginoauth", (req, res, next) => {
     })(req, res, next);
 });
 
-// router.get("/logoutoauth", function(req,res,next){
-//     req.logOut(function(err){
-//         if(err) {return next(err);}
-//         res.redirect("/");
-//     });
-// });
-
-router.get("/logoutoauth", function(req, res, next) {
-    req.logOut(function(err) {
-        if (err) { 
-            return next(err); 
-        }
-        req.session.destroy(function(err) {
-            if (err) {
-                console.error("Erro ao destruir a sessão:", err);
-                return next(err);
-            }
-            res.redirect("/"); // Redireciona após logout
-        });
-        res.clearCookie("connect.sid", { path: "/" });
-    });
-});
+router.get("/logoutoauth", function(req,res,next){
+     req.logOut(function(err){
+         if(err) {return next(err);}
+         res.redirect("/");
+     });
+ });
 
 
 
