@@ -7,23 +7,12 @@ const session = require("express-session");
 const giHubStrategy = require("passport-github2").Strategy;
 
 const cors = require("cors");
-app.use(cors());
 
+const dotenv = require('dotenv').config();
 const mongodb = require("./data/database");
-
 const port = process.env.PORT || 3000;
 
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-
-//Defining a user schema
-const UserSchema = new mongoose.Schema({
-    username: { type: String, required: true },
-    password: { type: String, required: true }
-});
-
-//defining a user model
-const User = mongoose.model('User', UserSchema);
+// app.use(cors());
 
 app
 .use(bodyParser.json())
@@ -46,10 +35,11 @@ app
 .use(cors({origin: "*"}))
 .use("/", require("./routes/index.js"));
 
+
 passport.use(new giHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: process.env.callback_url
+    callbackURL: process.env.CALLBACK_URL
 
 },
 function(accessToken, refreshToken, profile, done){
@@ -59,11 +49,14 @@ function(accessToken, refreshToken, profile, done){
 
 passport.serializeUser((user, done) => {
     done(null, user);
-})
+});
 
 passport.deserializeUser(( user, done) => {
     done(null, user);
-})
+});
+
+
+
 
 // app.use("/", require("./routes"));
 

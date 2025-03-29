@@ -1,4 +1,11 @@
 const router = require('express').Router();
+const passport = require('passport');
+const contactsController = require("../controllers/contacts");
+const itensControler = require("../controllers/itens");
+const userControler = require("../controllers/users");
+const validation = require("../middleware/validate");
+const {isAuthenticated} = require( "../middleware/authenticate");
+
 
 router.use("/",require("./swagger"));
 router.get("/", (req,res) => {res.send(`<html>
@@ -13,22 +20,14 @@ router.get("/", (req,res) => {res.send(`<html>
                     <li><a href=https://cse-341-project1-t08e.onrender.com/contacts/67ca09d206dd9a333bc7be0e>Contact Id: ca09d206dd9a333bc7be0e </a></li>
                 </ul>
             </body>
-        </html>`);});
-
-const passport = require('passport');
-const contactsController = require("../controllers/contacts");
-const itensControler = require("../controllers/itens");
-const userControler = require("../controllers/users");
-
-const validation = require("../middleware/validate");
-
-const {isAuthenticated} = require( "../middleware/authenticate");
+        </html>`);
+});
 
 // Route for contacts
 router.get(
     //#swagger.tags=[Get all contacts]
     "/contacts", isAuthenticated, contactsController.getAll); // Route to search all contacts
-router.get("/contacts/:id", isAuthenticated, isAuthenticatedcontactsController.getSingle); // Route to search for a contact by ID
+router.get("/contacts/:id", isAuthenticated, contactsController.getSingle); // Route to search for a contact by ID
 router.post("/contacts", isAuthenticated, validation.saveContact, contactsController.insertContact); // Route to create contact
 router.put("/contacts/:id", isAuthenticated, validation.saveContact,contactsController.updateContact);//route to update contact
 router.delete("/contacts/:id", isAuthenticated, contactsController.deleteContact); //Route to delete contact
@@ -49,14 +48,14 @@ router.post("/create-user", async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return res.status(400).json({ error: "Email e senha são obrigatórios" });
+        return res.status(400).json({ error: "Email and password are required" });
     }
 
     try {
-        const result = await createUser(email, password);
+        const result = await userControler.createUser(email, password);
         return res.status(201).json(result);
     } catch (error) {
-        console.error("Erro ao criar usuário:", error.message);
+        console.error("Error creating user:", error.message);
         return res.status(400).json({ error: error.message });
     }
 });
@@ -72,7 +71,7 @@ router.put("/update-user", async (req, res) => {
     }
 
     try {
-        const result = await updateUser(email, newPassword);
+        const result = await userControler.updateUser(email, newPassword);
         return res.status(200).json(result);
     } catch (error) {
         console.error("Erro ao atualizar usuário:", error.message);
@@ -89,7 +88,7 @@ router.post("/login", async (req, res) => {
     }
 
     try {
-        const result = await authenticateUser(email, password);
+        const result = await userControler.authenticateUser(email, password);
         return res.status(200).json(result);
     } catch (error) {
         console.error("Erro ao autenticar usuário:", error.message);
@@ -97,20 +96,23 @@ router.post("/login", async (req, res) => {
     }
 });
 
-//routes for user creation, login and logout
 
 
-router.get("/login-oauth", passport.authenticate("github"), (req, res) => {});
-
-router.get("/logout-oauth", function(req, res, next){
-    if (isAuthenticated){
-        req.logOut(function(err){
-            if (err) { return next(err);}
-        }); 
-        res.redirect("/");  
+router.get("/status", (req, res) => {
+    if (req.isAuthenticated()) {
+        res.status(200).json({ message: "Você está autenticado!", user: req.user });
+    } else {
+        res.status(401).json({ message: "Você não está autenticado." });
     }
-    res.send("Você não está logado.");
-    
+});
+
+router.get("/loginoauth", passport.authenticate("github"), (req,res) => {});
+
+router.get("/logoutoauth", function(req,res,next){
+    req.logOut(function(err){
+        if(err) {return next(err);}
+        res.redirect("/");
+    });
 });
 
 module.exports = router;

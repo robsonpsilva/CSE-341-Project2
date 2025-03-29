@@ -1,5 +1,6 @@
 const mongodb = require("../data/database");
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 
 // Função para criar um novo usuário
 const createUser = async (email, password) => {
@@ -12,7 +13,7 @@ const createUser = async (email, password) => {
             .findOne({ email });
 
         if (existingUser) {
-            throw new Error("Email já cadastrado");
+            throw new Error("Email already registered!");
         }
 
         // Criptografa a senha
@@ -27,10 +28,10 @@ const createUser = async (email, password) => {
             .insertOne({ email, password: hashedPassword });
 
         if (!result.acknowledged) {
-            throw new Error("Erro ao criar o usuário");
+            throw new Error("Error creating user!");
         }
 
-        return { message: "Usuário criado com sucesso!" };
+        return { message: "User created successfully!" };
     } catch (error) {
         throw error;
     }
@@ -47,7 +48,7 @@ const updateUser = async (email, newPassword) => {
             .findOne({ email });
 
         if (!existingUser) {
-            throw new Error("Usuário não encontrado");
+            throw new Error("User not found!");
         }
 
         // Criptografa a nova senha
@@ -65,10 +66,10 @@ const updateUser = async (email, newPassword) => {
             );
 
         if (result.matchedCount === 0) {
-            throw new Error("Não foi possível atualizar o usuário");
+            throw new Error("Unable to update user!");
         }
 
-        return { message: "Senha atualizada com sucesso!" };
+        return { message: "Password updated successfully!" };
     } catch (error) {
         throw error;
     }
@@ -85,21 +86,26 @@ const authenticateUser = async (email, password) => {
             .findOne({ email });
 
         if (!user) {
-            throw new Error("Usuário não encontrado");
+            throw new Error("User not found!");
         }
 
         // Compara a senha fornecida com o hash armazenado
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
-            throw new Error("Senha incorreta");
+            throw new Error("Incorrect password!");
         }
 
         // Retorna uma mensagem de sucesso ou informações do usuário
-        return { message: "Autenticação bem-sucedida", user };
+        return { message: "Authentication successful!", user };
     } catch (error) {
         throw error;
     }
 };
 
-module.exports = { authenticateUser, createUser, updateUser };
+const loginOAuth = (req, res, next) => {
+    // Chama a função de autenticação do Passport
+    passport.authenticate("github")(req, res, next);
+};
+
+module.exports = { authenticateUser, createUser, updateUser, loginOAuth };
